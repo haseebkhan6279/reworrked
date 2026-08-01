@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { OrdersModule } from './orders/orders.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { OrdersModule } from './orders/orders.module';
       useFactory: (config: ConfigService) => ({
         uri: config.getOrThrow<string>('MONGODB_URI'),
         family: 4,
-        serverSelectionTimeoutMS: 15000,
+        serverSelectionTimeoutMS: 20000,
       }),
     }),
     UsersModule,
@@ -30,5 +31,6 @@ import { OrdersModule } from './orders/orders.module';
     CatalogModule,
     OrdersModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
