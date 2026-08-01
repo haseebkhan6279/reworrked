@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --rw-canvas: #050505;
+  --rw-canvas-elev: #0a0a0a;
+  --rw-surface: #111111;
+  --rw-surface-2: #161616;
+  --rw-surface-3: #1c1c1c;
+  --rw-border: #2a2a2a;
+  --rw-text: #f5f5f5;
+  --rw-text-muted: #9a9a9a;
+  --rw-accent: #e8e4dc;
+  --rw-accent-ink: #0a0a0a;
+  --rw-sale: #b33a3a;
+}
+
+@theme inline {
+  --color-rw-canvas: var(--rw-canvas);
+  --color-rw-canvas-elev: var(--rw-canvas-elev);
+  --color-rw-surface: var(--rw-surface);
+  --color-rw-surface-2: var(--rw-surface-2);
+  --color-rw-surface-3: var(--rw-surface-3);
+  --color-rw-border: var(--rw-border);
+  --color-rw-text: var(--rw-text);
+  --color-rw-muted: var(--rw-text-muted);
+  --color-rw-accent: var(--rw-accent);
+  --color-rw-accent-ink: var(--rw-accent-ink);
+  --color-rw-sale: var(--rw-sale);
+  --font-display: "Bebas Neue", ui-sans-serif, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, sans-serif;
+}
+
+* {
+  border-color: var(--rw-border);
+}
+
+body {
+  margin: 0;
+  background: var(--rw-canvas);
+  color: var(--rw-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+}
+
+:focus-visible {
+  outline: 1px solid var(--rw-accent);
+  outline-offset: 2px;
+}

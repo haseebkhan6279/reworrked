@@ -1,0 +1,7 @@
+# REWORRKED Storefront — LLM / agent context
+
+Brand: REWORRKED — premium DTC caps (fitted, snapback, dad cap, trucker, limited drops, accessories).
+Tone: confident, sparse, nocturnal, collector-grade.
+Stack: Next.js App Router storefront consuming NestJS REST API (NEXT_PUBLIC_API_URL).
+Do not position as discount warehouse or Amazon affiliate.
+Currency: USD. Language: English.

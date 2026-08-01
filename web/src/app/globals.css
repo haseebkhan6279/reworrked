@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --rw-canvas: #050505;
+  --rw-canvas-elev: #0a0a0a;
+  --rw-surface: #111111;
+  --rw-surface-2: #161616;
+  --rw-surface-3: #1c1c1c;
+  --rw-border: #2a2a2a;
+  --rw-text: #f5f5f5;
+  --rw-text-muted: #9a9a9a;
+  --rw-accent: #e8e4dc;
+  --rw-accent-ink: #0a0a0a;
+  --rw-sale: #b33a3a;
+  --rw-focus: #e8e4dc;
+}
+
+@theme inline {
+  --color-rw-canvas: var(--rw-canvas);
+  --color-rw-canvas-elev: var(--rw-canvas-elev);
+  --color-rw-surface: var(--rw-surface);
+  --color-rw-surface-2: var(--rw-surface-2);
+  --color-rw-surface-3: var(--rw-surface-3);
+  --color-rw-border: var(--rw-border);
+  --color-rw-text: var(--rw-text);
+  --color-rw-muted: var(--rw-text-muted);
+  --color-rw-accent: var(--rw-accent);
+  --color-rw-accent-ink: var(--rw-accent-ink);
+  --color-rw-sale: var(--rw-sale);
+  --color-rw-focus: var(--rw-focus);
+  --font-display: var(--font-bebas);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--rw-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--rw-canvas);
+  color: var(--rw-text);
+  font-family: var(--font-dm-sans), ui-sans-serif, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--rw-accent);
+  color: var(--rw-accent-ink);
+}
+
+:focus-visible {
+  outline: 1px solid var(--rw-focus);
+  outline-offset: 2px;
+}
+
+.font-display {
+  font-family: var(--font-bebas), ui-sans-serif, sans-serif;
+  letter-spacing: 0.06em;
+}
+
+@keyframes rw-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rw-fade {
+  animation: rw-fade-up 0.8s ease-out both;
+}
+
+.animate-rw-fade-delay-1 {
+  animation: rw-fade-up 0.8s ease-out 0.1s both;
+}
+
+.animate-rw-fade-delay-2 {
+  animation: rw-fade-up 0.8s ease-out 0.25s both;
+}
+
+.animate-rw-fade-delay-3 {
+  animation: rw-fade-up 0.8s ease-out 0.4s both;
+}
+
+.product-card-img {
+  transition: transform 400ms ease;
+}
+
+.group:hover .product-card-img {
+  transform: scale(1.04);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes rw-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-rw-marquee {
+  animation: rw-marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rw-marquee {
+    animation: none;
+  }
+}

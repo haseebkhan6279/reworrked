@@ -1,0 +1,15 @@
+{
+  "name": "reworrked",
+  "private": true,
+  "workspaces": [
+    "web",
+    "dashboard",
+    "api"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w web",
+    "dev:dashboard": "npm run dev -w dashboard",
+    "dev:api": "npm run start:dev -w api",
+    "build": "npm run build -w web && npm run build -w dashboard && npm run build -w api"
+  }
+}
