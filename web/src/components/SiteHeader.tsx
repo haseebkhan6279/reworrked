@@ -2,13 +2,32 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CATEGORIES } from "@/lib/data";
 import { useCart } from "@/components/cart/CartProvider";
+
+type Department = "men" | "women";
+
+type MenuItem = {
+  name: string;
+  href?: string;
+  comingSoon?: boolean;
+};
+
+const DEPARTMENT_ITEMS: MenuItem[] = [
+  { name: "Clothing", comingSoon: true },
+  { name: "Accessories", comingSoon: true },
+  { name: "Shoes", comingSoon: true },
+  { name: "Caps", href: "/products" },
+];
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [department, setDepartment] = useState<Department>("men");
   const { count, openCart } = useCart();
+
+  function closeMenu() {
+    setMobileOpen(false);
+  }
 
   return (
     <header className="relative z-50 bg-transparent">
@@ -91,45 +110,86 @@ export function SiteHeader() {
 
       {mobileOpen && (
         <div className="absolute inset-x-0 top-full z-50 max-h-[80vh] overflow-y-auto border-t border-rw-border/30 bg-rw-canvas/98 px-4 py-6 backdrop-blur-md md:px-6">
-          <nav className="mx-auto flex max-w-[1600px] flex-col gap-4">
-            <Link
-              href="/products"
-              onClick={() => setMobileOpen(false)}
-              className="text-sm uppercase tracking-[0.18em]"
+          <nav className="mx-auto flex max-w-[1600px] flex-col md:max-w-md">
+            <div
+              className="mb-8 flex gap-8 border-b border-rw-border/40 pb-4"
+              role="tablist"
+              aria-label="Department"
             >
-              Shop All
-            </Link>
-            {CATEGORIES.map((c) => (
+              {(["men", "women"] as const).map((dept) => {
+                const active = department === dept;
+                return (
+                  <button
+                    key={dept}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setDepartment(dept)}
+                    className={`text-sm uppercase tracking-[0.2em] transition-colors ${
+                      active
+                        ? "font-semibold text-white"
+                        : "text-rw-muted hover:text-white"
+                    }`}
+                  >
+                    {dept}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
+              Shop by categories
+            </p>
+
+            <ul className="flex flex-col gap-4">
+              {DEPARTMENT_ITEMS.map((item) => (
+                <li key={`${department}-${item.name}`}>
+                  {item.comingSoon || !item.href ? (
+                    <span
+                      className="flex items-baseline gap-3 text-sm uppercase tracking-[0.14em] text-rw-muted"
+                      aria-disabled="true"
+                    >
+                      {item.name}
+                      <span className="text-[10px] tracking-[0.12em] text-rw-muted/70">
+                        Coming Soon
+                      </span>
+                    </span>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={closeMenu}
+                      className="text-sm font-medium uppercase tracking-[0.14em] text-white hover:text-rw-accent"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-col gap-4 border-t border-rw-border/40 pt-6">
               <Link
-                key={c.slug}
-                href={`/category/${c.slug}`}
-                onClick={() => setMobileOpen(false)}
-                className="text-sm uppercase tracking-[0.14em] text-rw-muted hover:text-white"
+                href="/blog"
+                onClick={closeMenu}
+                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white"
               >
-                {c.name}
+                Blog
               </Link>
-            ))}
-            <Link
-              href="/blog"
-              onClick={() => setMobileOpen(false)}
-              className="text-sm uppercase tracking-[0.18em]"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="text-sm uppercase tracking-[0.18em]"
-            >
-              Contact
-            </Link>
-            <Link
-              href="/auth/sign-in"
-              onClick={() => setMobileOpen(false)}
-              className="text-sm uppercase tracking-[0.18em] text-rw-muted sm:hidden"
-            >
-              Account
-            </Link>
+              <Link
+                href="/contact"
+                onClick={closeMenu}
+                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white"
+              >
+                Contact
+              </Link>
+              <Link
+                href="/auth/sign-in"
+                onClick={closeMenu}
+                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white sm:hidden"
+              >
+                Account
+              </Link>
+            </div>
           </nav>
         </div>
       )}

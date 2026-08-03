@@ -102,7 +102,7 @@ export default function CartPage() {
             <span>{formatPrice(subtotal)}</span>
           </div>
           <p className="mt-2 text-xs text-rw-muted">
-            Shipping calculated at checkout.
+            Free shipping on all orders.
           </p>
           <Link href="/checkout" className="mt-6 block">
             <Button className="w-full" size="lg">

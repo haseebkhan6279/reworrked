@@ -183,7 +183,7 @@ export function ProductDetailClient({
           </div>
 
           <p className="mt-8 text-xs leading-relaxed text-rw-muted">
-            Free shipping over Rs 5,000 · 30-day returns · Authenticity guaranteed
+            Free shipping on all orders · 30-day returns · Authenticity guaranteed
           </p>
         </div>
       </div>

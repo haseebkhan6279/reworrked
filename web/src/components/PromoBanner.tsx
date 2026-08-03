@@ -8,7 +8,7 @@ export function PromoBanner() {
   return (
     <div className="relative z-[51] bg-transparent px-3 py-2 text-center sm:px-4">
       <p className="pr-8 text-[9px] uppercase leading-snug tracking-[0.14em] text-white/80 sm:text-[10px] sm:tracking-[0.18em]">
-        Free shipping over Rs 5,000 · Night collection live
+        Free shipping on all orders · Night collection live
       </p>
       <button
         type="button"

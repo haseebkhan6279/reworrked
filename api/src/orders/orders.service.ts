@@ -4,9 +4,6 @@ import { Model } from 'mongoose';
 import { Order, OrderDocument, toAdminOrder } from './order.schema';
 import { CreateOrderDto, UpdateOrderStatusDto } from './dto/order.dto';
 
-const FREE_SHIPPING_MIN = 5000;
-const SHIPPING_FEE = 250;
-
 @Injectable()
 export class OrdersService {
   constructor(
@@ -23,8 +20,7 @@ export class OrdersService {
       (sum, item) => sum + item.price * item.qty,
       0,
     );
-    const shipping =
-      subtotal >= FREE_SHIPPING_MIN || subtotal === 0 ? 0 : SHIPPING_FEE;
+    const shipping = 0;
     const total = subtotal + shipping;
     const orderNumber = await this.nextOrderNumber();
 

@@ -49,7 +49,7 @@ export default async function LocalLandingPage({ params }: Props) {
           read cleaner than neon. Buy the cut you will still wear next season.
         </p>
         <p className="text-rw-muted">
-          Free US shipping over $75 · Authentic REWORRKED only.
+          Free shipping on all orders · Authentic REWORRKED only.
         </p>
       </div>
       <Link href="/products" className="mt-10 inline-block">

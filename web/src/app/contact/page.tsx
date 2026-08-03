@@ -27,15 +27,29 @@ export default function ContactPage() {
         <ul className="mt-4 space-y-4 text-sm">
           <li>
             <span className="block text-rw-muted">Email</span>
-            support@reworrked.com
+            <a
+              href="mailto:meermustafa@gmail.com"
+              className="transition-colors hover:text-rw-accent"
+            >
+              meermustafa@gmail.com
+            </a>
+          </li>
+          <li>
+            <span className="block text-rw-muted">Phone</span>
+            <a
+              href="tel:+923160770535"
+              className="transition-colors hover:text-rw-accent"
+            >
+              +92 316 0770535
+            </a>
           </li>
           <li>
             <span className="block text-rw-muted">Hours</span>
-            Mon–Fri · 10a–6p ET
+            Mon–Fri · 10a–6p PKT
           </li>
           <li>
             <span className="block text-rw-muted">Shipping</span>
-            Free over Rs 5,000 · COD nationwide
+            Free on all orders · COD nationwide
           </li>
           <li>
             <span className="block text-rw-muted">Returns</span>

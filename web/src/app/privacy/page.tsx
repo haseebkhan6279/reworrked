@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           Your rights
         </h2>
         <p>
-          Request access, correction, or deletion via support@reworrked.com.
+          Request access, correction, or deletion via meermustafa@gmail.com.
           Cookie preferences can be changed on the Cookies page.
         </p>
       </div>

@@ -13,9 +13,6 @@ import { EmptyState } from "@/components/ui/EmptyState";
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
-const FREE_SHIPPING_MIN = 5000;
-const SHIPPING_FEE = 250;
-
 const PROVINCES = [
   "Punjab",
   "Sindh",
@@ -29,8 +26,7 @@ const PROVINCES = [
 export default function CheckoutPage() {
   const router = useRouter();
   const { lines, subtotal, clearCart } = useCart();
-  const shipping =
-    subtotal >= FREE_SHIPPING_MIN || subtotal === 0 ? 0 : SHIPPING_FEE;
+  const shipping = 0;
   const total = subtotal + shipping;
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -216,13 +212,8 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-rw-muted">Shipping</span>
-              <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
+              <span>Free</span>
             </div>
-            {shipping > 0 && (
-              <p className="text-[11px] text-rw-muted">
-                Free shipping over {formatPrice(FREE_SHIPPING_MIN)}
-              </p>
-            )}
             <div className="flex justify-between border-t border-rw-border pt-3 text-base">
               <span>Total (COD)</span>
               <span>{formatPrice(total)}</span>
