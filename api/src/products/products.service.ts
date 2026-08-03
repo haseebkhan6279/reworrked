@@ -9,6 +9,12 @@ import { Product, ProductDocument, toAdminProduct } from './product.schema';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 import { slugify } from '../common/slug';
 
+function sanitizeSpecs(
+  specs?: { key: string; value: string; _id?: string }[],
+) {
+  return (specs ?? []).map(({ key, value }) => ({ key, value }));
+}
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -71,7 +77,7 @@ export class ProductsService {
       status: dto.status ?? 'draft',
       tags: dto.tags ?? [],
       highlights: dto.highlights ?? [],
-      specifications: dto.specifications ?? [],
+      specifications: sanitizeSpecs(dto.specifications),
       images: dto.images ?? [],
     });
     return toAdminProduct(doc);
@@ -83,6 +89,9 @@ export class ProductsService {
       const slug = slugify(dto.slug);
       if (!slug) throw new BadRequestException('A valid slug is required');
       patch.slug = slug;
+    }
+    if (dto.specifications !== undefined) {
+      patch.specifications = sanitizeSpecs(dto.specifications);
     }
     const doc = await this.productModel
       .findByIdAndUpdate(id, patch, { new: true })

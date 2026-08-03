@@ -39,7 +39,13 @@ export class Product {
   highlights: string[];
 
   @Prop({
-    type: [{ key: String, value: String }],
+    type: [
+      {
+        key: { type: String },
+        value: { type: String },
+        _id: false,
+      },
+    ],
     default: [],
   })
   specifications: { key: string; value: string }[];
@@ -73,7 +79,13 @@ export function toAdminProduct(doc: ProductDocument) {
     tags: o.tags ?? [],
     description: o.description ?? '',
     highlights: o.highlights ?? [],
-    specifications: o.specifications ?? [],
+    specifications: (o.specifications ?? []).map(
+      (s: { key?: string; value?: string }) => ({
+        key: s.key ?? '',
+        value: s.value ?? '',
+      }),
+    ),
+
     images,
     seoTitle: o.seoTitle ?? '',
     seoDescription: o.seoDescription ?? '',

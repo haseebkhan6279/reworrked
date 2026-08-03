@@ -10,6 +10,10 @@ import {
 import { Type } from 'class-transformer';
 
 class SpecDto {
+  @IsOptional()
+  @IsString()
+  _id?: string;
+
   @IsString()
   key: string;
 

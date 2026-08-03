@@ -80,7 +80,10 @@ export function ProductFormPage() {
         .split("\n")
         .map((h) => h.trim())
         .filter(Boolean),
-      specifications: specs.filter((s) => s.key.trim() || s.value.trim()),
+      specifications: specs
+        .filter((s) => s.key.trim() || s.value.trim())
+        .map((s) => ({ key: s.key, value: s.value })),
+
       seoTitle: String(fd.get("seoTitle") ?? ""),
       seoDescription: String(fd.get("seoDescription") ?? ""),
     };
