@@ -4,6 +4,15 @@ import type { AdminCategory } from "../lib/data";
 import { DeleteModal } from "../components/DeleteModal";
 import { Toast } from "../components/Toast";
 
+function slugify(input: string) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/['']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export function CategoriesPage() {
   const [rows, setRows] = useState<AdminCategory[]>([]);
   const [editing, setEditing] = useState<AdminCategory | null>(null);
@@ -32,7 +41,7 @@ export function CategoriesPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const name = String(fd.get("name"));
-    const slug = String(fd.get("slug"));
+    const slug = slugify(String(fd.get("slug") || name));
     try {
       if (editing) {
         const { data } = await api.patch<AdminCategory>(

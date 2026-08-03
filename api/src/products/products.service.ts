@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, ProductDocument, toAdminProduct } from './product.schema';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { slugify } from '../common/slug';
 
 @Injectable()
 export class ProductsService {
@@ -30,8 +35,11 @@ export class ProductsService {
   }
 
   async findBySlug(slug: string, publishedOnly = false) {
+    const raw = decodeURIComponent(slug).toLowerCase().trim();
+    const normalized = slugify(raw);
+    const slugCandidates = [...new Set([normalized, raw].filter(Boolean))];
     const filter: Record<string, unknown> = {
-      slug: slug.toLowerCase().trim(),
+      slug: { $in: slugCandidates },
     };
     if (publishedOnly) filter.status = 'published';
     const doc = await this.productModel.findOne(filter).exec();
@@ -53,9 +61,11 @@ export class ProductsService {
   }
 
   async create(dto: CreateProductDto) {
+    const slug = slugify(dto.slug || dto.name);
+    if (!slug) throw new BadRequestException('A valid slug is required');
     const doc = await this.productModel.create({
       ...dto,
-      slug: dto.slug.toLowerCase().trim(),
+      slug,
       brand: dto.brand ?? 'REWORRKED',
       stock: dto.stock ?? 0,
       status: dto.status ?? 'draft',
@@ -68,15 +78,14 @@ export class ProductsService {
   }
 
   async update(id: string, dto: UpdateProductDto) {
+    const patch: Record<string, unknown> = { ...dto };
+    if (dto.slug !== undefined) {
+      const slug = slugify(dto.slug);
+      if (!slug) throw new BadRequestException('A valid slug is required');
+      patch.slug = slug;
+    }
     const doc = await this.productModel
-      .findByIdAndUpdate(
-        id,
-        {
-          ...dto,
-          ...(dto.slug ? { slug: dto.slug.toLowerCase().trim() } : {}),
-        },
-        { new: true },
-      )
+      .findByIdAndUpdate(id, patch, { new: true })
       .exec();
     if (!doc) throw new NotFoundException('Product not found');
     return toAdminProduct(doc);

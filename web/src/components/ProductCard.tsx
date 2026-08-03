@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Product, formatPrice } from "@/lib/data";
+import { storeProductPath } from "@/lib/paths";
 import { savePercent } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ export function ProductCard({
 
   return (
     <Link
-      href={`/products/${product.slug}`}
+      href={storeProductPath(product.slug)}
       className={cn(
         "group relative flex flex-col border-b border-r border-rw-border bg-rw-surface",
         fillHeight && "h-full"

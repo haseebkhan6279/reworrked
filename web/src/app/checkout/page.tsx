@@ -11,7 +11,10 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
+  process.env.NEXT_PUBLIC_API_URL?.trim() ||
+  (process.env.NODE_ENV === "production"
+    ? "https://reworrked-web.vercel.app/api"
+    : "http://localhost:3000/api");
 
 const PROVINCES = [
   "Punjab",

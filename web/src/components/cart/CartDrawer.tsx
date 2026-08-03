@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/data";
+import { storeProductPath } from "@/lib/paths";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "./CartProvider";
 
@@ -60,7 +61,7 @@ export function CartDrawer() {
                     </div>
                     <div className="flex flex-1 flex-col gap-1">
                       <Link
-                        href={`/products/${line.product.slug}`}
+                        href={storeProductPath(line.product.slug)}
                         onClick={closeCart}
                         className="text-sm hover:text-rw-accent"
                       >

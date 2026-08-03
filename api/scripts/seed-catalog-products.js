@@ -280,7 +280,11 @@ const productSchema = new mongoose.Schema(
 
 async function main() {
   const env = loadEnv();
-  await mongoose.connect(env.MONGODB_URI, { family: 4 });
+  const uri = process.env.MONGODB_URI || env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is required (env or api/.env)");
+  }
+  await mongoose.connect(uri, { family: 4 });
   const Product = mongoose.model("Product", productSchema);
 
   let upserted = 0;

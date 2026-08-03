@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 
 type Department = "men" | "women";
@@ -29,32 +29,49 @@ export function SiteHeader() {
     setMobileOpen(false);
   }
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
   return (
     <header className="relative z-50 bg-transparent">
-      <div className="relative mx-auto grid h-14 max-w-[1600px] grid-cols-3 items-center px-3 sm:px-4 md:h-16 md:px-6">
+      <div className="relative z-[60] mx-auto grid h-14 max-w-[1600px] grid-cols-3 items-center px-3 sm:px-4 md:h-16 md:px-6">
         <div className="flex items-center gap-2 justify-self-start sm:gap-3">
           <button
             type="button"
             className="flex items-center gap-2 text-rw-text"
-            aria-label="Menu"
+            aria-label={mobileOpen ? "Close menu" : "Menu"}
             aria-expanded={mobileOpen}
             onClick={() => {
               setMobileOpen((v) => !v);
               setSearchOpen(false);
             }}
           >
-            <span className="flex flex-col gap-1.5">
-              <span className="block h-px w-5 bg-current" />
-              <span className="block h-px w-5 bg-current" />
-            </span>
+            {mobileOpen ? (
+              <span className="relative block h-3.5 w-5">
+                <span className="absolute left-0 top-1/2 block h-px w-5 -translate-y-1/2 rotate-45 bg-current" />
+                <span className="absolute left-0 top-1/2 block h-px w-5 -translate-y-1/2 -rotate-45 bg-current" />
+              </span>
+            ) : (
+              <span className="flex flex-col gap-1.5">
+                <span className="block h-px w-5 bg-current" />
+                <span className="block h-px w-5 bg-current" />
+              </span>
+            )}
             <span className="hidden text-[11px] font-medium uppercase tracking-[0.2em] md:inline">
-              Menu
+              {mobileOpen ? "Close" : "Menu"}
             </span>
           </button>
         </div>
 
         <Link
           href="/"
+          onClick={closeMenu}
           className="justify-self-center font-display text-xl tracking-[0.16em] text-white sm:text-2xl md:text-[1.85rem]"
         >
           REWORRKED
@@ -82,7 +99,10 @@ export function SiteHeader() {
           <button
             type="button"
             aria-label={`Cart, ${count} items`}
-            onClick={openCart}
+            onClick={() => {
+              setMobileOpen(false);
+              openCart();
+            }}
             className="relative text-rw-text"
           >
             <BagIcon />
@@ -96,7 +116,7 @@ export function SiteHeader() {
       </div>
 
       {searchOpen && (
-        <div className="border-t border-rw-border/30 bg-rw-canvas/95 px-3 py-3 backdrop-blur-md sm:px-4 md:px-6">
+        <div className="relative z-[60] border-t border-rw-border/30 bg-rw-canvas px-3 py-3 sm:px-4 md:px-6">
           <form action="/products" className="mx-auto max-w-[1600px]">
             <input
               name="q"
@@ -109,8 +129,13 @@ export function SiteHeader() {
       )}
 
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-full z-50 max-h-[80vh] overflow-y-auto border-t border-rw-border/30 bg-rw-canvas/98 px-4 py-6 backdrop-blur-md md:px-6">
-          <nav className="mx-auto flex max-w-[1600px] flex-col md:max-w-md">
+        <div
+          className="fixed inset-0 z-50 bg-rw-canvas"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation"
+        >
+          <nav className="flex h-full w-full max-w-[1600px] flex-col overflow-y-auto px-4 pb-10 pt-20 text-left sm:px-6 md:px-6 md:pt-24">
             <div
               className="mb-8 flex gap-8 border-b border-rw-border/40 pb-4"
               role="tablist"
@@ -127,7 +152,7 @@ export function SiteHeader() {
                     onClick={() => setDepartment(dept)}
                     className={`text-sm uppercase tracking-[0.2em] transition-colors ${
                       active
-                        ? "font-semibold text-white"
+                        ? "font-semibold text-white underline decoration-white underline-offset-8"
                         : "text-rw-muted hover:text-white"
                     }`}
                   >
@@ -171,21 +196,21 @@ export function SiteHeader() {
               <Link
                 href="/blog"
                 onClick={closeMenu}
-                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white"
+                className="text-sm uppercase tracking-[0.18em] text-white hover:text-rw-accent"
               >
                 Blog
               </Link>
               <Link
                 href="/contact"
                 onClick={closeMenu}
-                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white"
+                className="text-sm uppercase tracking-[0.18em] text-white hover:text-rw-accent"
               >
                 Contact
               </Link>
               <Link
                 href="/auth/sign-in"
                 onClick={closeMenu}
-                className="text-sm uppercase tracking-[0.18em] text-rw-muted hover:text-white sm:hidden"
+                className="text-sm uppercase tracking-[0.18em] text-white hover:text-rw-accent sm:hidden"
               >
                 Account
               </Link>

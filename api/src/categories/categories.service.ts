@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category, CategoryDocument, toAdminCategory } from './category.schema';
 import { Product, ProductDocument } from '../products/product.schema';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
+import { slugify } from '../common/slug';
 
 @Injectable()
 export class CategoriesService {
@@ -17,32 +22,40 @@ export class CategoriesService {
     const counts = await this.productModel.aggregate<{
       _id: string;
       count: number;
-    }>([{ $group: { _id: '$category', count: { $sum: 1 } } }]);
+    }>([
+      { $match: { status: 'published' } },
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+    ]);
     const map = new Map(counts.map((c) => [c._id, c.count]));
     return docs.map((d) => toAdminCategory(d, map.get(d.name) ?? 0));
   }
 
   async create(dto: CreateCategoryDto) {
+    const slug = slugify(dto.slug || dto.name);
+    if (!slug) throw new BadRequestException('A valid slug is required');
     const doc = await this.categoryModel.create({
       name: dto.name.trim(),
-      slug: dto.slug.toLowerCase().trim(),
+      slug,
     });
     return toAdminCategory(doc, 0);
   }
 
   async update(id: string, dto: UpdateCategoryDto) {
+    const patch: Record<string, unknown> = {};
+    if (dto.name) patch.name = dto.name.trim();
+    if (dto.slug !== undefined) {
+      const slug = slugify(dto.slug);
+      if (!slug) throw new BadRequestException('A valid slug is required');
+      patch.slug = slug;
+    }
     const doc = await this.categoryModel
-      .findByIdAndUpdate(
-        id,
-        {
-          ...(dto.name ? { name: dto.name.trim() } : {}),
-          ...(dto.slug ? { slug: dto.slug.toLowerCase().trim() } : {}),
-        },
-        { new: true },
-      )
+      .findByIdAndUpdate(id, patch, { new: true })
       .exec();
     if (!doc) throw new NotFoundException('Category not found');
-    const count = await this.productModel.countDocuments({ category: doc.name });
+    const count = await this.productModel.countDocuments({
+      category: doc.name,
+      status: 'published',
+    });
     return toAdminCategory(doc, count);
   }
 

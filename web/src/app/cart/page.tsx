@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/data";
+import { storeProductPath } from "@/lib/paths";
 import { useCart } from "@/components/cart/CartProvider";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -46,7 +47,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex flex-1 flex-col">
                   <Link
-                    href={`/products/${line.product.slug}`}
+                    href={storeProductPath(line.product.slug)}
                     className="text-sm hover:text-rw-accent"
                   >
                     {line.product.name}

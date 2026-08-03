@@ -5,6 +5,15 @@ import type { AdminCategory, AdminProduct } from "../lib/data";
 import { ImageUploader } from "../components/ImageUploader";
 import { Toast } from "../components/Toast";
 
+function slugify(input: string) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/['']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export function ProductFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,9 +58,10 @@ export function ProductFormPage() {
     e.preventDefault();
     setSaving(true);
     const fd = new FormData(e.currentTarget);
+    const name = String(fd.get("name") ?? "");
     const payload = {
-      name: String(fd.get("name") ?? ""),
-      slug: String(fd.get("slug") ?? ""),
+      name,
+      slug: slugify(String(fd.get("slug") ?? "") || name),
       brand: String(fd.get("brand") ?? "REWORRKED"),
       description: String(fd.get("description") ?? ""),
       price: Number(fd.get("price") ?? 0),
@@ -116,7 +126,13 @@ export function ProductFormPage() {
             Basics
           </h2>
           <Field label="Name" name="name" defaultValue={existing?.name} required />
-          <Field label="Slug" name="slug" defaultValue={existing?.slug} required />
+          <Field
+            label="Slug"
+            name="slug"
+            defaultValue={existing?.slug}
+            required
+            hint="URL path · letters, numbers, hyphens only (no spaces)"
+          />
           <Field
             label="Brand"
             name="brand"
@@ -309,12 +325,14 @@ function Field({
   type = "text",
   defaultValue,
   required,
+  hint,
 }: {
   label: string;
   name: string;
   type?: string;
   defaultValue?: string | number;
   required?: boolean;
+  hint?: string;
 }) {
   return (
     <label className="block">
@@ -328,6 +346,9 @@ function Field({
         defaultValue={defaultValue}
         className="mt-2 h-11 w-full border border-rw-border bg-rw-canvas px-3 text-sm focus:border-rw-accent focus:outline-none"
       />
+      {hint ? (
+        <span className="mt-1 block text-[11px] text-rw-muted">{hint}</span>
+      ) : null}
     </label>
   );
 }

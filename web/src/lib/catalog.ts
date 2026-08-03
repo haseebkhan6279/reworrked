@@ -1,5 +1,6 @@
 import type { Product } from "./data";
 import { PRODUCTS } from "./data";
+import { slugifyPath, storeProductPath } from "./paths";
 
 export type CatalogProduct = {
   id: string;
@@ -28,17 +29,13 @@ export type CatalogCategory = {
   productCount: number;
 };
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
+export { storeProductPath };
 
-function slugifyCategory(name: string) {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+const PROD_API_URL = "https://reworrked-web.vercel.app/api";
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.trim() ||
+  (process.env.NODE_ENV === "production" ? PROD_API_URL : "http://localhost:3000/api");
 
 export function mapCatalogProduct(p: CatalogProduct): Product {
   const specs: Record<string, string> = {};
@@ -57,13 +54,15 @@ export function mapCatalogProduct(p: CatalogProduct): Product {
         ? [p.thumb]
         : ["/media/WhatsApp_Image_2026-07-29_at_3.30.03_202607301426.jpeg"];
 
+  const slug = slugifyPath(p.slug || p.name);
+
   return {
     id: p.id,
-    slug: p.slug,
+    slug,
     name: p.name,
     brand: p.brand || "REWORRKED",
     category: p.category,
-    categorySlug: slugifyCategory(p.category),
+    categorySlug: slugifyPath(p.category),
     price: p.price,
     compareAtPrice: p.compareAtPrice,
     rating: 4.8,
@@ -76,7 +75,7 @@ export function mapCatalogProduct(p: CatalogProduct): Product {
     description: p.description || "",
     highlights: p.highlights ?? [],
     specs,
-    sku: `RW-${p.slug.slice(0, 12).toUpperCase()}`,
+    sku: `RW-${slug.slice(0, 12).toUpperCase()}`,
   };
 }
 
@@ -103,12 +102,22 @@ export async function getStoreProducts(): Promise<Product[]> {
 }
 
 export async function getStoreProduct(slug: string): Promise<Product | null> {
+  const normalized = slugifyPath(decodeURIComponent(slug));
   const remote = await fetchJson<CatalogProduct>(
-    `/catalog/products/by-slug/${encodeURIComponent(slug)}`
+    `/catalog/products/by-slug/${encodeURIComponent(normalized)}`
   );
   if (remote.ok) return mapCatalogProduct(remote.data);
 
-  const local = PRODUCTS.find((p) => p.slug === slug);
+  // Retry against list in case by-slug encoding differs but catalog list is fine
+  const list = await fetchJson<CatalogProduct[]>("/catalog/products");
+  if (list.ok) {
+    const hit = list.data.find(
+      (p) => slugifyPath(p.slug || p.name) === normalized
+    );
+    if (hit) return mapCatalogProduct(hit);
+  }
+
+  const local = PRODUCTS.find((p) => p.slug === normalized || p.slug === slug);
   return local ?? null;
 }
 
