@@ -24,11 +24,8 @@ async function bootstrap() {
       // Same-origin / server-to-server / mobile webviews sometimes send no Origin
       if (!origin) return callback(null, true);
       if (allowed.includes(origin)) return callback(null, true);
-      // Preview / staging hosts while custom domains settle
-      if (
-        /^https:\/\/[\w-]+\.up\.railway\.app$/.test(origin) ||
-        /^https:\/\/[\w.-]+\.vercel\.app$/.test(origin)
-      ) {
+      // Vercel preview / staging hosts while custom domains settle
+      if (/^https:\/\/[\w.-]+\.vercel\.app$/.test(origin)) {
         return callback(null, true);
       }
       return callback(new Error(`CORS blocked: ${origin}`), false);
