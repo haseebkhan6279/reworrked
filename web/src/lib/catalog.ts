@@ -76,6 +76,8 @@ export function mapCatalogProduct(p: CatalogProduct): Product {
     highlights: p.highlights ?? [],
     specs,
     sku: `RW-${slug.slice(0, 12).toUpperCase()}`,
+    seoTitle: p.seoTitle || undefined,
+    seoDescription: p.seoDescription || undefined,
   };
 }
 

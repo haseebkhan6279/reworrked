@@ -8,32 +8,37 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { BackToTop } from "@/components/BackToTop";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { Analytics } from "@/components/seo/Analytics";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  organizationJsonLd,
+  websiteJsonLd,
+  localBusinessJsonLd,
+  rootMetadata,
+} from "@/lib/seo";
 
 const bebas = Bebas_Neue({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-bebas",
+  display: "swap",
+  preload: true,
 });
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
+  display: "swap",
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
+  display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "REWORRKED — Premium Caps",
-    template: "%s · REWORRKED",
-  },
-  description:
-    "Reworked classics. Elevated fitted, snapback, dad cap, and limited drops — collector-grade headwear.",
-  metadataBase: new URL("https://reworrked.com"),
-};
+export const metadata: Metadata = rootMetadata();
 
 export default function RootLayout({
   children,
@@ -50,10 +55,26 @@ export default function RootLayout({
         className="flex min-h-full flex-col bg-rw-canvas font-sans text-rw-text antialiased"
         suppressHydrationWarning
       >
+        <JsonLd
+          data={[
+            organizationJsonLd(),
+            websiteJsonLd(),
+            localBusinessJsonLd(),
+          ]}
+        />
+        <Analytics />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+        >
+          Skip to content
+        </a>
         <CartProvider>
           <PromoBanner />
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
           <SiteFooter />
           <CartDrawer />
           <CookieConsent />

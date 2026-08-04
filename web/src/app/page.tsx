@@ -1,12 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { MEDIA, MODELS } from "@/lib/media";
 import { getStoreProducts } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { CollectionRail } from "@/components/home/CollectionRail";
 import { PromoDrop } from "@/components/home/PromoDrop";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, webPageJsonLd, faqJsonLd } from "@/lib/seo";
+import { SITE } from "@/lib/seo/config";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  ...buildMetadata({
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE.description,
+    path: "/",
+    keywords: [...SITE.keywords],
+  }),
+  title: {
+    absolute: `${SITE.name} — ${SITE.tagline}`,
+  },
+};
 
 export default async function HomePage() {
   const products = await getStoreProducts();
@@ -24,6 +40,32 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            title: `${SITE.name} — ${SITE.tagline}`,
+            description: SITE.description,
+            path: "/",
+          }),
+          faqJsonLd([
+            {
+              question: "What does REWORRKED sell?",
+              answer:
+                "REWORRKED sells premium caps and luxury headwear — fitted, snapback, dad cap, trucker, and limited embroidery drops.",
+            },
+            {
+              question: "Where does REWORRKED ship?",
+              answer:
+                "Nationwide across Pakistan with Cash on Delivery available on eligible orders.",
+            },
+            {
+              question: "Is REWORRKED a discount cap store?",
+              answer:
+                "No. REWORRKED is a collector-grade DTC headwear brand focused on silhouette, craft, and limited drops — not mass discount inventory.",
+            },
+          ]),
+        ]}
+      />
       {/* Hero */}
       <section className="relative -mt-14 min-h-[100svh] overflow-hidden md:-mt-16">
         <div className="absolute inset-0">

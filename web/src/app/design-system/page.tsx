@@ -11,6 +11,7 @@ import { ProductCard } from "@/components/ProductCard";
 export const metadata: Metadata = {
   title: "Design System",
   description: "REWORRKED dark tokens, type, and components.",
+  robots: { index: false, follow: false },
 };
 
 export default function DesignSystemPage() {

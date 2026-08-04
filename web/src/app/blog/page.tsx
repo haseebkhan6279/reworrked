@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { BLOG_POSTS } from "@/lib/data";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "From the Atelier",
-  description: "Fit guides, care, embroidery, and drop culture from REWORRKED.",
-};
+  description:
+    "Fit guides, care tips, embroidery craft, and drop culture from REWORRKED — editorial notes for collectors of premium caps.",
+  path: "/blog",
+  keywords: ["cap fit guide", "embroidery", "streetwear blog", "REWORRKED atelier"],
+});
 
 export default function BlogPage() {
   return (
@@ -26,7 +30,7 @@ export default function BlogPage() {
             <div className="relative aspect-[16/10] overflow-hidden bg-rw-surface">
               <Image
                 src={post.image}
-                alt=""
+                alt={post.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width:768px) 100vw, 33vw"

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { BLOG_POSTS, getPost } from "@/lib/data";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,7 +16,24 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  return { title: post?.title ?? "Article" };
+  if (!post) {
+    return buildMetadata({
+      title: "Article not found",
+      description: "This REWORRKED editorial is unavailable.",
+      path: `/blog/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+    image: post.image,
+    type: "article",
+    publishedTime: post.date,
+    modifiedTime: post.date,
+    keywords: [post.category, "REWORRKED", "caps", "headwear", post.title],
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -24,6 +43,16 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+      <JsonLd
+        data={[
+          articleJsonLd(post),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title },
+          ]),
+        ]}
+      />
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },

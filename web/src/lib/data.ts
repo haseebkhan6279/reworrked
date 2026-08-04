@@ -20,6 +20,8 @@ export type Product = {
   highlights: string[];
   specs: Record<string, string>;
   sku: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type BlogPost = {

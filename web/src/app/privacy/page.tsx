@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = buildMetadata({
+  title: "Privacy Policy",
+  description:
+    "How REWORRKED collects, uses, and protects personal data for orders, accounts, and storefront analytics.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

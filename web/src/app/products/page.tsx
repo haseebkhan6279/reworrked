@@ -6,11 +6,23 @@ import { ProductCard } from "@/components/ProductCard";
 import { CatalogFilters } from "@/components/CatalogFilters";
 import { Pagination } from "@/components/Pagination";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, collectionPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Shop Caps",
-  description: "Browse REWORRKED fitted, snapback, dad cap, trucker, and limited drops.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Shop Premium Caps",
+  description:
+    "Browse REWORRKED fitted, snapback, dad cap, trucker, and limited drops. Collector-grade headwear with Cash on Delivery across Pakistan.",
+  path: "/products",
+  keywords: [
+    "shop caps",
+    "premium caps Pakistan",
+    "dad caps",
+    "fitted caps",
+    "snapback",
+    "REWORRKED shop",
+  ],
+});
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +69,15 @@ export default async function ProductsPage({
 
   return (
     <div className="mx-auto max-w-7xl px-3 py-8 sm:px-4 sm:py-10 md:px-6 md:py-14">
+      <JsonLd
+        data={collectionPageJsonLd({
+          name: "Shop Premium Caps",
+          description:
+            "Browse REWORRKED fitted, snapback, dad cap, trucker, and limited drops.",
+          path: "/products",
+          products: filtered,
+        })}
+      />
       <div className="mb-6 sm:mb-8">
         <h1 className="font-display text-3xl tracking-[0.08em] sm:text-4xl md:text-5xl">
           Shop Caps

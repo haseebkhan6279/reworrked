@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ topic: string; location: string }>;
@@ -16,9 +18,15 @@ function titleCase(s: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { topic, location } = await params;
-  return {
-    title: `${titleCase(topic)} in ${titleCase(location)}`,
-  };
+  const topicLabel = titleCase(topic);
+  const city = titleCase(location);
+  const title = `${topicLabel} in ${city}`;
+  return buildMetadata({
+    title,
+    description: `Premium ${topicLabel.toLowerCase()} for ${city} — REWORRKED collector-grade headwear. Fit notes and night edits, not spam local lists.`,
+    path: `/local/${topic}/${location}`,
+    keywords: [topicLabel, city, "REWORRKED", "premium caps"],
+  });
 }
 
 export default async function LocalLandingPage({ params }: Props) {
@@ -28,6 +36,20 @@ export default async function LocalLandingPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            title: `${topicLabel} in ${city}`,
+            description: `Premium ${topicLabel.toLowerCase()} for ${city} from REWORRKED.`,
+            path: `/local/${topic}/${location}`,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Local", path: "/local" },
+            { name: `${topicLabel} · ${city}` },
+          ]),
+        ]}
+      />
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },

@@ -1,14 +1,32 @@
 import type { Metadata } from "next";
 import { ContactForm } from "./ContactForm";
+import { buildMetadata, faqJsonLd } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE } from "@/lib/seo/config";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Contact",
-  description: "Contact REWORRKED support and atelier.",
-};
+  description: `Contact ${SITE.name} support and atelier. Orders, fit questions, and drop access — we reply within one business day.`,
+  path: "/contact",
+  keywords: ["contact REWORRKED", "cap support", "customer service Pakistan"],
+});
 
 export default function ContactPage() {
   return (
     <div className="mx-auto grid max-w-7xl gap-12 px-4 py-10 md:grid-cols-[1.2fr_0.8fr] md:px-6 md:py-14">
+      <JsonLd
+        data={faqJsonLd([
+          {
+            question: "How do I contact REWORRKED?",
+            answer: `Email ${SITE.email} or call ${SITE.phoneDisplay}. We reply within one business day.`,
+          },
+          {
+            question: "Do you ship in Pakistan?",
+            answer:
+              "Yes. Nationwide delivery with Cash on Delivery on eligible orders.",
+          },
+        ])}
+      />
       <div>
         <h1 className="font-display text-4xl tracking-[0.08em] md:text-5xl">
           Contact
@@ -28,32 +46,24 @@ export default function ContactPage() {
           <li>
             <span className="block text-rw-muted">Email</span>
             <a
-              href="mailto:meermustafa@gmail.com"
+              href={`mailto:${SITE.email}`}
               className="transition-colors hover:text-rw-accent"
             >
-              meermustafa@gmail.com
+              {SITE.email}
             </a>
           </li>
           <li>
             <span className="block text-rw-muted">Phone</span>
             <a
-              href="tel:+923160770535"
+              href={`tel:${SITE.phone}`}
               className="transition-colors hover:text-rw-accent"
             >
-              +92 316 0770535
+              {SITE.phoneDisplay}
             </a>
           </li>
           <li>
             <span className="block text-rw-muted">Hours</span>
-            Mon–Fri · 10a–6p PKT
-          </li>
-          <li>
-            <span className="block text-rw-muted">Shipping</span>
-            Free on all orders · COD nationwide
-          </li>
-          <li>
-            <span className="block text-rw-muted">Returns</span>
-            30 days · unworn with tags
+            Mon–Sat · 11:00–20:00 PKT
           </li>
         </ul>
       </aside>
